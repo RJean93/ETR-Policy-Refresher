@@ -1,19 +1,13 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /trainingUsers/{userId} {
-      // Employees can create, read, and update only their own training record.
-      allow create, read, update: if request.auth != null
-                                  && request.auth.uid == userId;
-
-      // IMPORTANT: Replace the address below with your exact admin login email.
-      // Add additional quoted addresses separated by commas when needed.
-      allow read: if request.auth != null
-                  && request.auth.token.email in [
-                    'rjean@etr.ca'
-                  ];
-
-      allow delete: if false;
+    function signedIn() { return request.auth != null; }
+    function admin() {
+      return signedIn() && request.auth.token.email in ['rjean@etr.ca'];
+    }
+    match /trainingUsers/{uid} {
+      allow create, read, update: if signedIn() && request.auth.uid == uid;
+      allow read, update, delete: if admin();
     }
   }
 }

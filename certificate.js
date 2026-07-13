@@ -1,1 +1,17 @@
-window.setupCertificate=function(state){const input=document.getElementById('employeeName'),display=document.getElementById('certNameDisplay'),date=document.getElementById('certDate');input.value=state.name||'';display.textContent=state.name||'Employee Name';date.textContent=new Date().toLocaleDateString('en-CA',{year:'numeric',month:'long',day:'numeric'});input.addEventListener('input',()=>{display.textContent=input.value.trim()||'Employee Name';state.name=input.value.trim();ProgressStore.save(state)});document.getElementById('printCert').addEventListener('click',()=>window.print())};
+window.setupCertificate = function(state){
+  const nameInput=document.getElementById('employeeName');
+  const nameDisplay=document.getElementById('certNameDisplay');
+  const date=document.getElementById('certDate');
+  const id=document.getElementById('certId');
+  nameInput.value=state.employeeName||'';
+  function refresh(){
+    state.employeeName=nameInput.value.trim();
+    nameDisplay.textContent=state.employeeName||'Employee Name';
+    date.textContent=new Date().toLocaleDateString('en-CA',{year:'numeric',month:'long',day:'numeric'});
+    id.textContent=state.certificateId?`Certificate ID: ${state.certificateId}`:'';
+    ProgressStore.save(state);
+  }
+  nameInput.addEventListener('input',refresh);
+  document.getElementById('printCert').addEventListener('click',()=>{refresh();window.print()});
+  refresh();
+};

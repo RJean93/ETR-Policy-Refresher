@@ -16,4 +16,3 @@ window.ETR_FIREBASE_CONFIG = {
 window.ETR_ADMIN_EMAILS = [
   "rjean@etr.ca"
 ];
-
